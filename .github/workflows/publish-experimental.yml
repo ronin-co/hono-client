@@ -1,0 +1,51 @@
+name: Publish Experimental Packages
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    permissions:
+      # Required for `actions/checkout@v3`
+      contents: read
+      # Required for `thollander/actions-comment-pull-request@v2`
+      pull-requests: write
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3.1.0
+
+      # Needed only for bumping package version and publishing npm packages.
+      - name: Set up Node.js
+        uses: actions/setup-node@v3.5.1
+      - run: echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_READ_AND_WRITE }}' > ~/.npmrc
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build Package
+        run: bun run build
+
+      - name: Bump `hono-ronin`
+        id: bump-ronin
+        uses: ./.github/actions/bump-version
+
+      - name: Comment on PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: packages_announcement
+          message: |
+            Released an experimental package:
+
+            ```bash
+            bun add hono-ronin@${{ env.VERSION_TAG }}
+            ```
+
+            This package will be removed after the pull request has been merged.

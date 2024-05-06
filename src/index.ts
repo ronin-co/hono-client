@@ -1,0 +1,59 @@
+import { createMiddleware } from "hono/factory";
+import createFactory from "ronin";
+
+type Factory = ReturnType<typeof createFactory>;
+
+export type Bindings = {
+  RONIN_TOKEN: string;
+};
+
+export type Variables = {
+  ronin: Factory;
+};
+
+type Env = {
+  Bindings: Bindings;
+  Variables: Variables;
+};
+
+type QueryHandlerOptions = Omit<Parameters<typeof createFactory>[0], "token">;
+
+/**
+ * Create a Hono middleware that injects a RONIN client into the Hono context variables.
+ *
+ * @param options - An optional object that can be used to configure the RONIN client.
+ *
+ * @example .env
+ * ```bash
+ * RONIN_TOKEN=your-ronin-token
+ * ```
+ *
+ * @example
+ * ```ts
+ * import { Hono } from 'hono';
+ * import { ronin, type Bindings, type Variables } from 'hono-ronin';
+ *
+ * const app = new Hono()
+ * 	.use('*', ronin())
+ * 	.get('/', async (c) => {
+ * 		const posts = await c.var.ronin.get.posts();
+ * 		return c.json(posts);
+ * 	});
+ * ```
+ *
+ * @returns A Hono middleware
+ */
+export const ronin = (options: QueryHandlerOptions = {}) =>
+  createMiddleware<Env>(async (c, next) => {
+    if (!c.env.RONIN_TOKEN)
+      throw new Error("Missing `RONIN_TOKEN` in environment variables");
+
+    const client = createFactory({
+      token: c.env.RONIN_TOKEN,
+      ...options,
+    });
+
+    c.set("ronin", client);
+
+    await next();
+  });

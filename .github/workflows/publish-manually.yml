@@ -1,0 +1,71 @@
+name: Manually Publish npm Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: Choose a version type to bump the package version by.
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - prerelease
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.ORG_GH_RONIN_APP_ID }}
+          private_key: ${{ secrets.ORG_GH_RONIN_APP_PRIVATE_KEY }}
+
+      - name: Code Checkout
+        uses: actions/checkout@v3.1.0
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+
+      # Needed only for bumping package version and publishing npm packages.
+      - name: Set up Node.js
+        uses: actions/setup-node@v3.5.1
+      - run: echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_READ_AND_WRITE }}' > ~/.npmrc
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build Package
+        run: bun run build
+
+      - name: Set Git Config
+        run: |
+          # See where these config values come from at https://stackoverflow.com/a/74071223
+          git config --global user.name "ronin-app[bot]"
+          git config --global user.email 135042755+ronin-app[bot]@users.noreply.github.com
+
+      - name: Bump `hono-ronin`
+        run: |
+          npm version ${{ inputs.version_type }} --git-tag-version=false
+          echo "NEW_VERSION=$(npm pkg get version --workspaces=false | tr -d \")" >> $GITHUB_ENV
+
+      - name: Push New Version
+        run: |
+          git fetch
+          git checkout ${GITHUB_HEAD_REF}
+          git pull origin ${GITHUB_HEAD_REF}
+          git commit -a -m '${{ env.NEW_VERSION }}' --no-verify
+          git tag -a ${{ env.NEW_VERSION }} -m '${{ env.NEW_VERSION }}'
+          git push origin ${GITHUB_HEAD_REF}
+          # Push tag
+          git push origin ${{ env.NEW_VERSION }}
+
+      - name: Publish npm Package
+        run: npm publish
