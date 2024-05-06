@@ -1,0 +1,28 @@
+name: Remove Experimental Packages
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Remove Experimental Packages
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3.1.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3.5.1
+      - run: echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_READ_AND_WRITE }}' > ~/.npmrc
+
+      # This converts the branch name into dash-case, so it can be used as a
+      # valid dist-tag.
+      - name: Extract Branch Name
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | sed -r 's/([a-z0-9])([A-Z])/\1-\L\2/g' | sed 's/_/-/g' | sed 's/\//-/g')" >> $GITHUB_ENV
+
+      - name: Remove Experimental Packages
+        run: npm dist-tag rm hono-ronin $BRANCH_NAME-experimental

@@ -1,0 +1,53 @@
+{
+  "name": "hono-ronin",
+  "version": "0.0.2",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "description": "Access the RONIN data platform via Hono.",
+  "scripts": {
+    "dev": "bun run build -- --watch",
+    "build": "bunchee",
+    "check": "bunx @biomejs/biome check --apply {./**/*.ts,**.json}",
+    "format": "bunx @biomejs/biome format --write {./**/*.ts,**.json}",
+    "lint": "bunx @biomejs/biome lint --apply {./**/*.ts,**.json}",
+    "test": "bun test",
+    "prepare": "husky"
+  },
+  "files": ["dist"],
+  "repository": "ronin-co/hono-ronin",
+  "homepage": "https://github.com/ronin-co/hono-ronin",
+  "keywords": ["ronin", "hono", "client", "database", "orm"],
+  "lint-staged": {
+    "**/*": ["bunx @biomejs/biome format --write {./**/*.ts,**.json}"]
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "ronin": "3.0.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.7.2",
+    "@types/bun": "1.1.1",
+    "bunchee": "5.1.5",
+    "hono": "4.3.2",
+    "husky": "9.0.11",
+    "lint-staged": "15.2.2",
+    "msw": "2.2.14",
+    "typescript": "5.4.5"
+  },
+  "peerDependencies": {
+    "hono": ">=3.9.0"
+  },
+  "peerDependenciesMeta": {
+    "hono": {
+      "optional": false
+    }
+  }
+}

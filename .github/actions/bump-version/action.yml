@@ -1,0 +1,56 @@
+name: Publish Experimental Packages
+description: Bumps the version of an npm package and publishes it with an experimental tag.
+
+on:
+  workflow_call: []
+
+inputs:
+  package_dir:
+    description: Directory of the Package to Publish
+    required: true
+    default: './'
+
+outputs:
+  VERSION_TAG:
+    description: Generated Experimental Version Tag for This Package
+    value: ${{ steps.version-tag.outputs.VERSION_TAG }}
+
+runs:
+  using: composite
+  steps:
+    - name: Construct Experimental Version Tag
+      id: version-tag
+      shell: bash
+      run: |
+        BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | sed -r 's/([a-z0-9])([A-Z])/\1-\L\2/g' | sed 's/_/-/g' | sed 's/\//-/g')
+
+        echo "VERSION_TAG=$(echo $BRANCH_NAME)-experimental" >> $GITHUB_ENV
+        echo "VERSION_TAG=$(echo $VERSION_TAG)" >> $GITHUB_OUTPUT
+
+    - name: Bump ${{ inputs.package_dir }}
+      shell: bash
+      run: |
+        cd ${{ inputs.package_dir }}
+
+        PACKAGE_NAME=$(cat package.json | grep "name" | cut -d':' -f 2 | cut -d'"' -f 2)
+        echo "PACKAGE_NAME=${PACKAGE_NAME}" >> $GITHUB_ENV
+
+        # Matches any version that ends with "-author-ron-123-experimental.<number>". e.g. 1.0.0-leo-ron-123-experimental.0
+        REGEX="\-$VERSION_TAG.[0-9]\{1,\}$"
+
+        # Get all versions
+        ALL_VERSIONS=$(npm view $PACKAGE_NAME versions --json | jq -r '.[]')
+
+        # Check if the experimental version already exists
+        if ! echo "$ALL_VERSIONS" | grep -q "$REGEX"; then
+          # If not, create it
+          npm version prerelease --preid=$VERSION_TAG --no-git-tag-version
+        else
+          # Otherwise up it
+          LATEST_VERSION=$(echo "$ALL_VERSIONS" | grep "$REGEX" | tail -1)
+          npm version $(npx semver $LATEST_VERSION -i prerelease --preid="$VERSION_TAG") --no-git-tag-version
+        fi
+
+    - name: Publish to npm
+      shell: bash
+      run: cd ${{ inputs.package_dir }} && npm publish --tag="$VERSION_TAG"
