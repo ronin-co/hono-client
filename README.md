@@ -1,6 +1,6 @@
 # Hono + RONIN
 
-[![Tests](https://github.com/ronin-co/hono-ronin/actions/workflows/validate.yml/badge.svg)](https://github.com/ronin-co/hono-ronin/actions/workflows/validate.yml)
+[![Tests](https://github.com/ronin-co/hono-client/actions/workflows/validate.yml/badge.svg)](https://github.com/ronin-co/hono-client/actions/workflows/validate.yml)
 [![Install Size](https://packagephobia.com/badge?p=hono-ronin)](https://packagephobia.com/result?p=hono-ronin)
 
 A [Hono middleware](https://hono.dev/guides/middleware) for querying data from [RONIN](https://ronin.co) with ease.
