@@ -40,7 +40,7 @@
     }
   },
   "dependencies": {
-    "ronin": "3.0.1"
+    "ronin": "3.0.4"
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
