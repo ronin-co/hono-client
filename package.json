@@ -44,12 +44,12 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
-    "@types/bun": "1.1.1",
+    "@types/bun": "1.1.2",
     "bunchee": "5.1.5",
-    "hono": "4.3.2",
+    "hono": "4.3.6",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
-    "msw": "2.2.14",
+    "msw": "2.3.0",
     "typescript": "5.4.5"
   },
   "peerDependencies": {
