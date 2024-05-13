@@ -1,0 +1,41 @@
+name: Update Lockfile
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.ORG_GH_RONIN_APP_ID }}
+          private_key: ${{ secrets.ORG_GH_RONIN_APP_PRIVATE_KEY }}
+
+      - name: Code Checkout
+        uses: actions/checkout@v3.1.0
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Commit Changes and Push
+        run: |
+          # See where these config values come from at https://stackoverflow.com/a/74071223
+          git config --global user.name "ronin-app[bot]"
+          git config --global user.email 135042755+ronin-app[bot]@users.noreply.github.com
+          # Commit changes
+          git fetch
+          git checkout ${GITHUB_HEAD_REF}
+          git pull origin ${GITHUB_HEAD_REF}
+          git commit -a -m 'Bump `bun.lockb`' --no-verify
+          git push origin ${GITHUB_HEAD_REF}
