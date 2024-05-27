@@ -10,12 +10,3 @@ updates:
 
     labels:
       - 'enhancement'
-
-    # Create one PR for all production dependencies, and one for all
-    # development dependencies. The latter is easier/faster to merge because it
-    # usually only affects local development.
-    groups:
-      production:
-        dependency-type: 'production'
-      development:
-        dependency-type: 'development'
