@@ -1,12 +1,18 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
+  - package-ecosystem: "npm"
+    directory: "/"
 
     # Open a new pull request every week, if there are updates available.
     schedule:
-      interval: 'weekly'
-      timezone: 'Europe/Berlin'
+      interval: "weekly"
+      timezone: "Europe/Berlin"
 
     labels:
-      - 'enhancement'
+      - "enhancement"
+
+    # Create one pull request for all dependencies.
+    groups:
+      all:
+        patterns:
+          - "*"
