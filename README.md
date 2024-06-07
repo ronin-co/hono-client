@@ -30,7 +30,7 @@ const app = new Hono();
 app.use("*", ronin());
 
 app.get("/", async (c) => {
-  const posts = await c.vars.ronin.get.posts();
+  const posts = await c.var.ronin.get.posts();
   return c.json(posts);
 });
 ```
