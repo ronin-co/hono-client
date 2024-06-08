@@ -15,22 +15,12 @@
     "test": "bun test",
     "prepare": "husky"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "repository": "ronin-co/hono-ronin",
   "homepage": "https://github.com/ronin-co/hono-ronin",
-  "keywords": [
-    "ronin",
-    "hono",
-    "client",
-    "database",
-    "orm"
-  ],
+  "keywords": ["ronin", "hono", "client", "database", "orm"],
   "lint-staged": {
-    "**/*": [
-      "bunx @biomejs/biome format --write {./**/*.ts,**.json}"
-    ]
+    "**/*": ["bunx @biomejs/biome format --write {./**/*.ts,**.json}"]
   },
   "exports": {
     ".": {
@@ -40,7 +30,7 @@
     }
   },
   "dependencies": {
-    "ronin": "3.1.1"
+    "ronin": "3.3.7"
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
