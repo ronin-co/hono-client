@@ -40,7 +40,7 @@
     }
   },
   "dependencies": {
-    "ronin": "4.0.4"
+    "ronin": "4.0.7"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.1",
@@ -48,7 +48,7 @@
     "bunchee": "5.1.6",
     "hono": "4.4.5",
     "husky": "9.0.11",
-    "lint-staged": "15.2.6",
+    "lint-staged": "15.2.7",
     "msw": "2.3.1",
     "typescript": "5.4.5"
   },
