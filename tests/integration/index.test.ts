@@ -59,7 +59,7 @@ describe("use `ronin` middleware", () => {
     expect(json).toHaveLength(0);
   });
 
-  it("with a custom options", async () => {
+  it("with a custom options (object)", async () => {
     const app = factory
       .createApp()
       .use(
@@ -99,5 +99,76 @@ describe("use `ronin` middleware", () => {
     expect(json).toBeDefined();
     expect(json).toBeInstanceOf(Array);
     expect(json).toHaveLength(1);
+  });
+
+  it("with a custom options (function)", async () => {
+    const app = factory
+      .createApp()
+      .use(
+        "*",
+        ronin(() => ({
+          hooks: {
+            user: {
+              beforeGet: (query) => {
+                query.limitedTo = 1;
+                return query;
+              },
+            },
+          },
+          asyncContext: new AsyncLocalStorage(),
+        })),
+      )
+      .get("/", async (c) => {
+        expect(c.var.ronin).toBeDefined();
+
+        const users = await c.var.ronin.get.users();
+
+        expect(users).toBeDefined();
+        expect(users).toBeInstanceOf(Array);
+
+        return c.json(users);
+      });
+
+    const response = await testClient(app, {
+      RONIN_TOKEN: import.meta.env.RONIN_TOKEN,
+    }).index.$get();
+
+    expect(response.ok).toBe(true);
+    expect(response.status).toBe(200);
+
+    const json = await response.json();
+
+    expect(json).toBeDefined();
+    expect(json).toBeInstanceOf(Array);
+    expect(json).toHaveLength(1);
+  });
+
+  it("with a ignored `token` property", async () => {
+    const app = factory
+      .createApp()
+      .use("*", ronin({ token: crypto.randomUUID() }))
+      .get("/", async (c) => {
+        expect(c.var.ronin).toBeDefined();
+
+        const users = await c.var.ronin.get.users();
+
+        expect(users).toBeDefined();
+        expect(users).toBeInstanceOf(Array);
+
+        return c.json(users);
+      });
+
+    const response = await testClient(app, {
+      RONIN_TOKEN: import.meta.env.RONIN_TOKEN,
+    }).index.$get();
+
+    expect(response.ok).toBe(true);
+    expect(response.status).toBe(200);
+
+    const json = await response.json();
+
+    expect(json).toBeDefined();
+    expect(json).toBeInstanceOf(Array);
+    expect(json).toHaveLength(0);
   });
 });
