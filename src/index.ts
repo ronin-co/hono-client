@@ -51,7 +51,7 @@ export const ronin = (options: QueryHandlerOptions = {}) =>
     const userOptions = typeof options === "function" ? options() : options;
     if (userOptions.token) {
       console.warn(
-        "The `token` option is ignored in favour of `c.env.RONIN_TOKEN` when using the `ronin` middleware",
+        "The `token` option is ignored in favor of `c.env.RONIN_TOKEN` when using the `ronin` middleware.",
       );
 
       // biome-ignore lint/performance/noDelete: We're only deleting the property if it exists
