@@ -16,7 +16,7 @@ type Env = {
   Variables: Variables;
 };
 
-type QueryHandlerOptions = Omit<Parameters<typeof createFactory>[0], "token">;
+type QueryHandlerOptions = Parameters<typeof createFactory>[0];
 
 /**
  * Create a Hono middleware that injects a RONIN client into the Hono context variables.
@@ -48,9 +48,19 @@ export const ronin = (options: QueryHandlerOptions = {}) =>
     if (!c.env.RONIN_TOKEN)
       throw new Error("Missing `RONIN_TOKEN` in environment variables");
 
+    const userOptions = typeof options === "function" ? options() : options;
+    if (userOptions.token) {
+      console.warn(
+        "The `token` option is ignored in favour of `c.env.RONIN_TOKEN` when using the `ronin` middleware",
+      );
+
+      // biome-ignore lint/performance/noDelete: We're only deleting the property if it exists
+      delete userOptions.token;
+    }
+
     const client = createFactory({
       token: c.env.RONIN_TOKEN,
-      ...options,
+      ...userOptions,
     });
 
     c.set("ronin", client);
