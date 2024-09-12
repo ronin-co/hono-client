@@ -39,7 +39,7 @@
     "hono": "4.5.11",
     "husky": "9.1.5",
     "lint-staged": "15.2.10",
-    "msw": "2.4.4",
+    "msw": "2.4.3",
     "typescript": "5.5.4"
   },
   "peerDependencies": {
