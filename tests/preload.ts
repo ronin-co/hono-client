@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll } from 'bun:test';
-import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
 
 import.meta.env.RONIN_TOKEN = 'secret-token';
 
