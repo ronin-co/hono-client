@@ -1,20 +1,20 @@
-import { describe, expect, it } from "bun:test";
-import { AsyncLocalStorage } from "node:async_hooks";
-import { createFactory } from "hono/factory";
-import { testClient } from "hono/testing";
+import { describe, expect, it } from 'bun:test';
+import { AsyncLocalStorage } from 'node:async_hooks';
+import { createFactory } from 'hono/factory';
+import { testClient } from 'hono/testing';
 
-import { ronin } from "@/index";
+import { ronin } from '@/index';
 
-import type { Bindings, Variables } from "@/index";
+import type { Bindings, Variables } from '@/index';
 
-describe("use `ronin` middleware", () => {
+describe('use `ronin` middleware', () => {
   const factory = createFactory<{ Bindings: Bindings; Variables: Variables }>();
 
-  it("with a missing `RONIN_TOKEN`", async () => {
+  it('with a missing `RONIN_TOKEN`', async () => {
     const app = factory
       .createApp()
-      .use("*", ronin())
-      .get("/", async (c) => {
+      .use('*', ronin())
+      .get('/', async (c) => {
         expect(c.var.ronin).toBeDefined();
 
         const posts = (await c.var.ronin.get.blogPosts()) as Array<unknown>;
@@ -30,11 +30,11 @@ describe("use `ronin` middleware", () => {
     expect(response.status).toBe(500);
   });
 
-  it("with default options", async () => {
+  it('with default options', async () => {
     const app = factory
       .createApp()
-      .use("*", ronin())
-      .get("/", async (c) => {
+      .use('*', ronin())
+      .get('/', async (c) => {
         expect(c.var.ronin).toBeDefined();
 
         const users = await c.var.ronin.get.users();
@@ -59,11 +59,11 @@ describe("use `ronin` middleware", () => {
     expect(json).toHaveLength(0);
   });
 
-  it("with a custom options (object)", async () => {
+  it('with a custom options (object)', async () => {
     const app = factory
       .createApp()
       .use(
-        "*",
+        '*',
         ronin({
           hooks: {
             user: {
@@ -76,7 +76,7 @@ describe("use `ronin` middleware", () => {
           asyncContext: new AsyncLocalStorage(),
         }),
       )
-      .get("/", async (c) => {
+      .get('/', async (c) => {
         expect(c.var.ronin).toBeDefined();
 
         const users = await c.var.ronin.get.users();
@@ -101,11 +101,11 @@ describe("use `ronin` middleware", () => {
     expect(json).toHaveLength(1);
   });
 
-  it("with a custom options (function)", async () => {
+  it('with a custom options (function)', async () => {
     const app = factory
       .createApp()
       .use(
-        "*",
+        '*',
         ronin(() => ({
           hooks: {
             user: {
@@ -118,7 +118,7 @@ describe("use `ronin` middleware", () => {
           asyncContext: new AsyncLocalStorage(),
         })),
       )
-      .get("/", async (c) => {
+      .get('/', async (c) => {
         expect(c.var.ronin).toBeDefined();
 
         const users = await c.var.ronin.get.users();
@@ -143,11 +143,11 @@ describe("use `ronin` middleware", () => {
     expect(json).toHaveLength(1);
   });
 
-  it("with a ignored `token` property", async () => {
+  it('with a ignored `token` property', async () => {
     const app = factory
       .createApp()
-      .use("*", ronin({ token: crypto.randomUUID() }))
-      .get("/", async (c) => {
+      .use('*', ronin({ token: crypto.randomUUID() }))
+      .get('/', async (c) => {
         expect(c.var.ronin).toBeDefined();
 
         const users = await c.var.ronin.get.users();

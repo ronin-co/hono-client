@@ -1,3 +1,5 @@
+import type { RONIN } from 'ronin';
+
 interface ImportMetaEnv {
   RONIN_TOKEN: string;
 }
