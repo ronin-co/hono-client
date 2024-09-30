@@ -1,5 +1,5 @@
-import { createMiddleware } from "hono/factory";
-import createFactory from "ronin";
+import { createMiddleware } from 'hono/factory';
+import createFactory from 'ronin';
 
 type Factory = ReturnType<typeof createFactory>;
 
@@ -46,12 +46,12 @@ type QueryHandlerOptions = Parameters<typeof createFactory>[0];
 export const ronin = (options: QueryHandlerOptions = {}) =>
   createMiddleware<Env>(async (c, next) => {
     if (!c.env.RONIN_TOKEN)
-      throw new Error("Missing `RONIN_TOKEN` in environment variables");
+      throw new Error('Missing `RONIN_TOKEN` in environment variables');
 
-    const userOptions = typeof options === "function" ? options() : options;
+    const userOptions = typeof options === 'function' ? options() : options;
     if (userOptions.token) {
       console.warn(
-        "The `token` option is ignored in favor of `c.env.RONIN_TOKEN` when using the `ronin` middleware.",
+        'The `token` option is ignored in favor of `c.env.RONIN_TOKEN` when using the `ronin` middleware.',
       );
 
       // biome-ignore lint/performance/noDelete: We're only deleting the property if it exists
@@ -63,7 +63,7 @@ export const ronin = (options: QueryHandlerOptions = {}) =>
       ...userOptions,
     });
 
-    c.set("ronin", client);
+    c.set('ronin', client);
 
     await next();
   });
