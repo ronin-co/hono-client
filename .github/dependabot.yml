@@ -3,9 +3,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
 
-    # Open a new pull request every week, if there are updates available.
+    # Open a new pull request every month, if there are updates available.
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       timezone: "Europe/Berlin"
 
     labels:
