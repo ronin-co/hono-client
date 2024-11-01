@@ -30,17 +30,17 @@
     }
   },
   "dependencies": {
-    "ronin": "4.3.1"
+    "ronin": "4.4.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.2",
-    "@types/bun": "1.1.8",
-    "bunchee": "5.4.0",
-    "hono": "4.5.11",
-    "husky": "9.1.5",
+    "@biomejs/biome": "1.9.4",
+    "@types/bun": "1.1.12",
+    "bunchee": "5.6.1",
+    "hono": "4.6.8",
+    "husky": "9.1.6",
     "lint-staged": "15.2.10",
-    "msw": "2.4.3",
-    "typescript": "5.5.4"
+    "msw": "2.6.0",
+    "typescript": "5.6.3"
   },
   "peerDependencies": {
     "hono": ">=3.9.0"
