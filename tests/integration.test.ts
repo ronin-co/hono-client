@@ -151,7 +151,8 @@ describe('use `ronin` middleware', () => {
     }).index.$get();
 
     expect(receivedError).toMatchObject({
-      message: 'Missing `RONIN_TOKEN` in environment variables',
+      message:
+        'A `RONIN_TOKEN` environment variable must be provided for the RONIN middleware',
     });
   });
 
@@ -178,7 +179,7 @@ describe('use `ronin` middleware', () => {
     }).index.$get();
 
     expect(receivedError).toMatchObject({
-      message: 'No `token` option is allowed',
+      message: 'The RONIN middleware does not support a `token` option',
     });
   });
 });

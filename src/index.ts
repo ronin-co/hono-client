@@ -45,13 +45,18 @@ type QueryHandlerOptions = Parameters<typeof createFactory>[0];
  */
 export const ronin = (options: QueryHandlerOptions = {}) =>
   createMiddleware<Env>(async (c, next) => {
-    if (!c.env.RONIN_TOKEN)
-      throw new Error('Missing `RONIN_TOKEN` in environment variables');
+    if (!c.env.RONIN_TOKEN) {
+      throw new Error(
+        'A `RONIN_TOKEN` environment variable must be provided for the RONIN middleware',
+      );
+    }
 
     const { token: userToken, ...userOptions } =
       typeof options === 'function' ? options() : options;
 
-    if (userToken) throw new Error('No `token` option is allowed');
+    if (userToken) {
+      throw new Error('The RONIN middleware does not support a `token` option');
+    }
 
     const client = createFactory({
       token: c.env.RONIN_TOKEN,
