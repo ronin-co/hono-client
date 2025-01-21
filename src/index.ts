@@ -48,14 +48,10 @@ export const ronin = (options: QueryHandlerOptions = {}) =>
     if (!c.env.RONIN_TOKEN)
       throw new Error('Missing `RONIN_TOKEN` in environment variables');
 
-    const userOptions = typeof options === 'function' ? options() : options;
-    if (userOptions.token) {
-      console.warn(
-        'The `token` option is ignored in favor of `c.env.RONIN_TOKEN` when using the `ronin` middleware.',
-      );
+    const { token: userToken, ...userOptions } =
+      typeof options === 'function' ? options() : options;
 
-      delete userOptions.token;
-    }
+    if (userToken) throw new Error('No `token` option is allowed');
 
     const client = createFactory({
       token: c.env.RONIN_TOKEN,

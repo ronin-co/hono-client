@@ -48,8 +48,7 @@
         "all": true,
 
         "noBarrelFile": "off",
-        "noReExportAll": "off",
-        "noDelete": "off"
+        "noReExportAll": "off"
       },
       "security": { "all": true },
       "style": {
