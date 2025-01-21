@@ -48,7 +48,8 @@
         "all": true,
 
         "noBarrelFile": "off",
-        "noReExportAll": "off"
+        "noReExportAll": "off",
+        "noDelete": "off"
       },
       "security": { "all": true },
       "style": {
@@ -80,5 +81,17 @@
     "clientKind": "git",
     "defaultBranch": "main",
     "enabled": true
-  }
+  },
+  "overrides": [
+    {
+      "include": ["tests/**"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "useTopLevelRegex": "off"
+          }
+        }
+      }
+    }
+  ]
 }
