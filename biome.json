@@ -81,17 +81,5 @@
     "clientKind": "git",
     "defaultBranch": "main",
     "enabled": true
-  },
-  "overrides": [
-    {
-      "include": ["tests/**"],
-      "linter": {
-        "rules": {
-          "performance": {
-            "useTopLevelRegex": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }
