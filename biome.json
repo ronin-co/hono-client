@@ -44,9 +44,7 @@
         "noNestedTernary": "off",
         "useExplicitType": "off"
       },
-      "performance": {
-        "all": true
-      },
+      "performance": { "all": true },
       "security": { "all": true },
       "style": {
         "all": true,
@@ -64,10 +62,7 @@
         "useShorthandArrayType": "off",
         "useDefaultSwitchClause": "off"
       },
-      "suspicious": {
-        "all": true,
-        "noConsole": "off"
-      }
+      "suspicious": { "all": true }
     }
   },
   "organizeImports": {
