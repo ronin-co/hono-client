@@ -44,13 +44,7 @@
         "noNestedTernary": "off",
         "useExplicitType": "off"
       },
-      "performance": {
-        "all": true,
-
-        "noBarrelFile": "off",
-        "noReExportAll": "off",
-        "noDelete": "off"
-      },
+      "performance": { "all": true },
       "security": { "all": true },
       "style": {
         "all": true,
@@ -68,10 +62,7 @@
         "useShorthandArrayType": "off",
         "useDefaultSwitchClause": "off"
       },
-      "suspicious": {
-        "all": true,
-        "noConsole": "off"
-      }
+      "suspicious": { "all": true }
     }
   },
   "organizeImports": {
@@ -81,17 +72,5 @@
     "clientKind": "git",
     "defaultBranch": "main",
     "enabled": true
-  },
-  "overrides": [
-    {
-      "include": ["tests/**"],
-      "linter": {
-        "rules": {
-          "performance": {
-            "useTopLevelRegex": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }
