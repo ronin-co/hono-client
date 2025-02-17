@@ -1,6 +1,9 @@
 import { createMiddleware } from 'hono/factory';
 import createFactory from 'ronin';
 
+import type { Context } from 'hono';
+import type { QueryHandlerOptions } from 'ronin/types';
+
 type Factory = ReturnType<typeof createFactory>;
 
 export type Bindings = {
@@ -16,7 +19,7 @@ type Env = {
   Variables: Variables;
 };
 
-type QueryHandlerOptions = Parameters<typeof createFactory>[0];
+interface Options extends QueryHandlerOptions {}
 
 /**
  * Create a Hono middleware that injects a RONIN client into the Hono context variables.
@@ -43,24 +46,23 @@ type QueryHandlerOptions = Parameters<typeof createFactory>[0];
  *
  * @returns A Hono middleware.
  */
-export const ronin = (options: QueryHandlerOptions = {}) =>
+export const ronin = (options?: Options | ((context: Context) => Options)) =>
   createMiddleware<Env>(async (c, next) => {
-    if (!c.env.RONIN_TOKEN) {
+    const userOptions = options
+      ? typeof options === 'function'
+        ? options(c)
+        : options
+      : ({} satisfies QueryHandlerOptions);
+
+    const token = userOptions.token ?? c.env.RONIN_TOKEN;
+    if (!token)
       throw new Error(
-        'A `RONIN_TOKEN` environment variable must be provided for the RONIN middleware',
+        'Either a `RONIN_TOKEN` environment variable or a `token` option must be provided for the RONIN middleware',
       );
-    }
-
-    const { token: userToken, ...userOptions } =
-      typeof options === 'function' ? options() : options;
-
-    if (userToken) {
-      throw new Error('The RONIN middleware does not support a `token` option');
-    }
 
     const client = createFactory({
-      token: c.env.RONIN_TOKEN,
       ...userOptions,
+      token,
     });
 
     c.set('ronin', client);
